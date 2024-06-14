@@ -4,16 +4,14 @@ import openai
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from tools import load
+from tools import load, Model
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model = 'gpt-3.5-turbo'
-fine_tuned_model = os.getenv("FINE_TUNED_MODEL")
 
 
-def generate_use_case():
+def generate_use_case(user_prompt, model=Model.GPT_3_5):
     instructions = load('documents/usecase_generator_instructions.txt')
 
     system_prompt = f'''
@@ -25,12 +23,8 @@ def generate_use_case():
         Considere os dados de entrada sugeridos pelo usuário.
     '''
 
-    user_prompt = """"
-        Ana que deseja realizar login na plataforma AcordeLab.
-    """
-
     response = openai.chat.completions.create(
-        model=fine_tuned_model,
+        model=model.value,
         temperature=0.5,
         messages=[
             {

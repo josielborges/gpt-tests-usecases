@@ -1,3 +1,17 @@
+import os
+from enum import Enum
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+class Model(Enum):
+    GPT_3_5 = 'gpt-3.5-turbo'
+    GPT_4O = 'gpt-4o'
+    GPT_FINE_TUNED = os.getenv('FINE_TUNED_MODEL')
+
+
 def load(filename):
     try:
         with open(filename, "r") as file:
