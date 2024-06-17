@@ -4,15 +4,46 @@ import openai
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from tools import load
+from thread_helper import Helper
+from tools import load, Model
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model = 'gpt-3.5-turbo'
 
 
-def generate_script(usecase, test_scenario):
+def generate_script(test_scenario, document, files_dictionary, assistant, thread, model=Model.GPT_3_5.GPT_4O.value):
+    question = f'''
+        Você é um especialista em gerar scripts de teste para elaboração de casos de uso e cenários de teste.
+
+        Seu cenário de teste deve fornecer um script em Selenium e deve utilizar o chromium como driver para isso
+        Além disso, seu código deve ser escrito em Python e deve utilizar apenas as bibliotecas em destaque.
+        Dando uma pausar de 3 segundos antes de fechar o script.
+
+        # Bibliotecas
+
+        from selenium import webdriver
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.chrome.service import Service
+        import time
+
+        # Arquivos que farão parte do teste
+
+        Consulte nos arquivos internos os documentos: {files_dictionary[document + ".html"]}, {files_dictionary[document + ".css"]}  e {files_dictionary[document + ".js"]}
+
+        Além disso, considere o {test_scenario} para elaborar o teste em selenium.
+
+        # Saída
+
+        Apenas um script em python com comentários em português para auxiliar a pessoa desenvolvedora
+    '''
+
+    thread_helper = Helper(client)
+    return thread_helper.include_message_and_process_response(question, thread, assistant, model)
+
+
+def generate_script_old(usecase, test_scenario):
     company_document = load('documents/acord_lab.txt')
 
     system_prompt = f'''
@@ -40,7 +71,7 @@ def generate_script(usecase, test_scenario):
     '''
 
     response = openai.chat.completions.create(
-        model=model,
+        model=Model.GPT_3_5.value,
         temperature=0.5,
         messages=[
             {
