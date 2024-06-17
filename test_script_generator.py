@@ -4,6 +4,7 @@ import openai
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from test_users_creator import create_test_users
 from thread_helper import Helper
 from tools import load, Model
 
@@ -12,7 +13,10 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-def generate_script(test_scenario, document, files_dictionary, assistant, thread, model=Model.GPT_3_5.GPT_4O.value):
+def generate_script(test_scenario, document, files_dictionary, assistant, thread, model=Model.GPT_4O.value):
+    test_users = create_test_users(test_scenario, document, files_dictionary, model)
+    print("\nUsuários Gerados com o modo JSON:\n", test_users)
+
     question = f'''
         Você é um especialista em gerar scripts de teste para elaboração de casos de uso e cenários de teste.
 
@@ -30,9 +34,14 @@ def generate_script(test_scenario, document, files_dictionary, assistant, thread
 
         # Arquivos que farão parte do teste
 
-        Consulte nos arquivos internos os documentos: {files_dictionary[document + ".html"]}, {files_dictionary[document + ".css"]}  e {files_dictionary[document + ".js"]}
+        Consulte nos arquivos internos os documentos: {files_dictionary[document + ".html"]}, 
+        {files_dictionary[document + ".css"]}  e {files_dictionary[document + ".js"]}
 
         Além disso, considere o {test_scenario} para elaborar o teste em selenium.
+        
+        Considere também inserir quatro (4) casos de teste, utilizando os resultados de {test_users}. Faça as 
+        iterações em um laço de repetição, mostrando ao final "Aprovado" se o teste deveria logar e logou ou deveria 
+        falhar e falhou.
 
         # Saída
 
