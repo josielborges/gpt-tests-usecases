@@ -16,6 +16,7 @@ class Model(Enum):
     GPT_3_5 = 'gpt-3.5-turbo'
     GPT_4O = 'gpt-4o'
     GPT_FINE_TUNED = os.getenv('FINE_TUNED_MODEL')
+    EMBEDDING = 'text-embedding-3-small'
 
 
 class ThreadExecutionStatus(Enum):
