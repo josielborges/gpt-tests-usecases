@@ -3,8 +3,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from tools import Model, tools
 from faiss_project import create_faiss_data, FAISS_DATA_PATH, METADATA_PATH, get_similar_documents
+from tools import Model, tools
 
 load_dotenv()
 
@@ -53,6 +53,7 @@ def create_assistant(model=Model.GPT_4O.value):
 
     return assistant
 
+
 # Formato do curso, não deve funcionar por que usa a v1 do assistent
 def create_web_app_id_list_optimized(prompt, directory='AcordeLab'):
     html_search = f"Propósito: gerar tags e elementos HTML para a página: {prompt}. Tipo de arquivo: HTML."
@@ -72,7 +73,7 @@ def create_web_app_id_list_optimized(prompt, directory='AcordeLab'):
     identified_js = get_similar_documents(js_search, faiss_data, METADATA_PATH)
     use_cases = 'documents/use_cases_examples.txt'
 
-    file_list = [identified_html, identified_css, identified_js use_cases]
+    file_list = [identified_html, identified_css, identified_js, use_cases]
 
     for file in file_list:
         file_path = file
@@ -86,7 +87,8 @@ def create_web_app_id_list_optimized(prompt, directory='AcordeLab'):
 
     return files_ids_list, files_dictionary
 
-
+    # OLD
+    #
     # file_id_list = []
     # files_dictionary = {}
     #
@@ -114,6 +116,7 @@ def create_web_app_id_list_optimized(prompt, directory='AcordeLab'):
     # files_dictionary[filename] = use_case_example_file.id
     #
     # return file_id_list, files_dictionary
+
 
 # Formato do curso, não deve funcionar por que usa a v1 do assistent
 def create_web_app_id_list(directory='AcordeLab'):
@@ -179,7 +182,7 @@ def create_vector_store(directory='AcordeLab'):
     file_id_list.append(use_case_example_file.id)
     files_dictionary[filename] = use_case_example_file.id
 
-    print (file_streams)
+    print(file_streams)
 
     client.beta.vector_stores.file_batches.upload_and_poll(
         vector_store_id=vector_store.id,

@@ -1,8 +1,8 @@
+import json
 import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
-import json
 
 from tools import Model
 
@@ -94,5 +94,3 @@ def generate_meta_data(document, file_name, model=Model.GPT_4O.value):
     )
 
     return response.choices[0].message.content
-
-# print(generate_embedding('Olá, mundo!'))

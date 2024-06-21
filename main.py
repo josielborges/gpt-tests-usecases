@@ -1,5 +1,3 @@
-import openai
-
 from assistant import (create_assistant, create_vector_store, crate_thread, remove_vector_store, remove_files,
                        remove_assistant, remove_thread)
 from test_scenarios_generator import generate_test_scenario
@@ -39,6 +37,8 @@ def main():
         remove_assistant(assistant.id)
         remove_thread(thread.id)
 
+    # OLD
+    #
     # use_cases = generate_use_case(user_prompt, Model.GPT_3_5)
     # print(f'\nCaso de uso - Modelo padrão:\n{use_cases}')
     #
